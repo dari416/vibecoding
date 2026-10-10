@@ -1,0 +1,1592 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyLearn — Бесплатный курс Python</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+        pre code {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+        }
+        * {
+            scroll-behavior: smooth;
+        }
+        .lesson-content h2 {
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .lesson-content h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .lesson-content p {
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+        }
+        .lesson-content li {
+            margin-bottom: 0.25rem;
+            line-height: 1.6;
+        }
+        textarea {
+            tab-size: 4;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        ::selection {
+            background-color: rgba(59, 130, 246, 0.3);
+        }
+        details summary {
+            list-style: none;
+        }
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] summary {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useCallback } = React;
+
+        // ==================== ДАННЫЕ КУРСА ====================
+        const modules = [
+            {
+                id: 'intro',
+                title: 'Введение в Python',
+                icon: '🐍',
+                lessons: [
+                    {
+                        id: 'intro-1',
+                        title: 'Что такое Python?',
+                        content: `## Что такое Python?
+
+Python — это высокоуровневый язык программирования общего назначения, созданный **Гвидо ван Россумом** и впервые выпущенный в 1991 году.
+
+### Почему Python?
+
+- 🟢 **Простой синтаксис** — код читается почти как английский текст
+- 🟢 **Огромное сообщество** — миллионы разработчиков по всему миру
+- 🟢 **Универсальность** — веб, наука, AI, автоматизация, игры
+- 🟢 **Востребованность** — один из самых популярных языков в мире
+
+### Где используется Python?
+
+| Область | Примеры |
+|---------|---------|
+| Веб-разработка | Django, Flask, FastAPI |
+| Data Science | pandas, NumPy, matplotlib |
+| Machine Learning | TensorFlow, PyTorch, scikit-learn |
+| Автоматизация | скрипты, боты, парсинг |
+| Разработка игр | Pygame |
+
+### Ваша первая программа
+
+В Python для вывода текста используется функция \`print()\`:
+
+\`\`\`python
+print("Привет, мир!")
+\`\`\`
+
+Это классическая первая программа — "Hello, World!" — которая просто выводит текст на экран.`,
+                        code: `# Ваша первая программа на Python!
+print("Привет, мир!")
+print("Я учу Python!")`,
+                    },
+                    {
+                        id: 'intro-2',
+                        title: 'Комментарии',
+                        content: `## Комментарии в Python
+
+Комментарии — это заметки в коде, которые объясняют что делает программа. Python игнорирует комментарии при выполнении.
+
+### Однострочные комментарии
+
+Однострочный комментарий начинается с символа \`#\`:
+
+\`\`\`python
+# Это комментарий
+print("Привет")  # Это тоже комментарий
+\`\`\`
+
+### Многострочные комментарии
+
+Для многострочных комментариев используются тройные кавычки:
+
+\`\`\`python
+"""
+Это многострочный комментарий.
+Он может занимать несколько строк.
+"""
+\`\`\`
+
+### Зачем нужны комментарии?
+
+1. **Объяснение логики** — почему код написан именно так
+2. **Временное отключение** — можно "закомментировать" строку
+3. **Документация** — описание функций и модулей
+
+> 💡 **Совет:** Пишите комментарии, которые объясняют **почему**, а не **что** делает код.`,
+                        code: `# Это программа с комментариями
+# Автор: Студент PyLearn
+
+"""
+Эта программа демонстрирует
+использование комментариев в Python
+"""
+
+# Выводим приветствие
+print("Привет!")  # Приветствие пользователя
+
+# Выводим информацию о курсе
+print("Добро пожаловать на курс Python!")`,
+                    },
+                ],
+            },
+            {
+                id: 'variables',
+                title: 'Переменные и типы данных',
+                icon: '📦',
+                lessons: [
+                    {
+                        id: 'var-1',
+                        title: 'Переменные',
+                        content: `## Переменные в Python
+
+Переменная — это именованная область памяти, которая хранит значение. В Python не нужно объявлять тип переменной — он определяется автоматически.
+
+### Создание переменных
+
+\`\`\`python
+name = "Алиса"      # строка (str)
+age = 25            # целое число (int)
+height = 1.68       # дробное число (float)
+is_student = True   # логическое значение (bool)
+\`\`\`
+
+### Правила именования
+
+- ✅ Начинается с буквы или символа \`_\`
+- ✅ Содержит буквы, цифры и \`_\`
+- ✅ Регистр имеет значение (\`Name\` ≠ \`name\`)
+- ❌ Не может начинаться с цифры
+- ❌ Не может содержать пробелы и спецсимволы
+
+### Стиль именования (PEP 8)
+
+\`\`\`python
+# ✅ Правильно (snake_case)
+user_name = "Боб"
+max_score = 100
+
+# ❌ Неправильно
+userName = "Боб"    # camelCase — не для Python
+X = 10              # непонятное имя
+\`\`\`
+
+### Множественное присваивание
+
+\`\`\`python
+x, y, z = 1, 2, 3
+a = b = c = 0
+\`\`\``,
+                        code: `# Создаём переменные
+name = "Python"
+version = 3.12
+is_awesome = True
+
+# Выводим значения
+print("Язык:", name)
+print("Версия:", version)
+print("Крутой?", is_awesome)
+
+# Множественное присваивание
+x, y, z = 10, 20, 30
+print("Сумма:", x + y + z)`,
+                        exercise: {
+                            description: 'Создайте переменные `language` со значением "Python" и `year` со значением 1991. Выведите их с помощью print().',
+                            starterCode: '# Создайте переменные здесь\n\n\n# Выведите их\n',
+                            solution: 'language = "Python"\nyear = 1991\nprint(language)\nprint(year)',
+                            hint: 'Используйте = для присваивания значений переменным',
+                            tests: [
+                                { description: 'Переменная language существует', check: (code) => code.includes('language') && code.includes('=') },
+                                { description: 'Переменная year существует', check: (code) => code.includes('year') && code.includes('=') },
+                                { description: 'Используется print()', check: (code) => code.includes('print(') },
+                            ],
+                        },
+                    },
+                    {
+                        id: 'var-2',
+                        title: 'Числовые типы',
+                        content: `## Числовые типы данных
+
+Python поддерживает несколько числовых типов:
+
+### int (целые числа)
+
+\`\`\`python
+age = 25
+negative = -10
+big_number = 1_000_000  # можно использовать _ для читаемости
+\`\`\`
+
+### float (числа с плавающей точкой)
+
+\`\`\`python
+pi = 3.14159
+temperature = -5.2
+scientific = 1.5e10  # 15000000000.0
+\`\`\`
+
+### Арифметические операции
+
+\`\`\`python
+a = 10
+b = 3
+
+print(a + b)   # 13 — сложение
+print(a - b)   # 7  — вычитание
+print(a * b)   # 30 — умножение
+print(a / b)   # 3.333... — деление
+print(a // b)  # 3  — целочисленное деление
+print(a % b)   # 1  — остаток от деления
+print(a ** b)  # 1000 — возведение в степень
+\`\`\`
+
+### Преобразование типов
+
+\`\`\`python
+# Из строки в число
+num = int("42")      # 42
+pi = float("3.14")   # 3.14
+
+# Из числа в строку
+text = str(100)      # "100"
+
+# Округление
+print(round(3.7))    # 4
+print(round(3.14159, 2))  # 3.14
+\`\`\``,
+                        code: `# Арифметические операции
+a = 17
+b = 5
+
+print("a + b =", a + b)    # Сложение
+print("a - b =", a - b)    # Вычитание
+print("a * b =", a * b)    # Умножение
+print("a / b =", a / b)    # Деление
+print("a // b =", a // b)  # Целочисленное деление
+print("a % b =", a % b)    # Остаток
+print("a ** b =", a ** b)  # Степень
+
+# Преобразование типов
+num_str = "42"
+num = int(num_str)
+print("Число:", num, type(num))`,
+                        exercise: {
+                            description: 'Вычислите площадь круга с радиусом 7. Формула: S = π * r². Используйте π = 3.14159. Выведите результат.',
+                            starterCode: '# Вычислите площадь круга\nr = 7\npi = 3.14159\n\n# Ваш код здесь\n',
+                            solution: 'r = 7\npi = 3.14159\narea = pi * r ** 2\nprint("Площадь круга:", area)',
+                            hint: 'Используйте оператор ** для возведения в степень: r ** 2',
+                            tests: [
+                                { description: 'Используется переменная r', check: (code) => code.includes('r') },
+                                { description: 'Используется возведение в степень (**)', check: (code) => code.includes('**') || code.includes('* r') },
+                                { description: 'Результат выводится через print()', check: (code) => code.includes('print(') },
+                            ],
+                        },
+                    },
+                    {
+                        id: 'var-3',
+                        title: 'Строки',
+                        content: `## Строки (str)
+
+Строка — это последовательность символов. В Python строки создаются с помощью кавычек.
+
+### Создание строк
+
+\`\`\`python
+single = 'Привет'
+double = "Мир"
+multi = """Это
+многострочная
+строка"""
+\`\`\`
+
+### Операции со строками
+
+\`\`\`python
+# Конкатенация (сложение)
+greeting = "Привет" + " " + "Мир"  # "Привет Мир"
+
+# Повторение
+line = "-" * 20  # "--------------------"
+
+# Длина строки
+length = len("Python")  # 6
+
+# Индексация
+word = "Python"
+print(word[0])   # 'P' — первый символ
+print(word[-1])  # 'n' — последний символ
+
+# Срезы (slicing)
+print(word[0:3])  # 'Pyt'
+print(word[2:])   # 'thon'
+print(word[:4])   # 'Pyth'
+\`\`\`
+
+### Методы строк
+
+\`\`\`python
+text = "Hello, World!"
+
+text.upper()       # "HELLO, WORLD!"
+text.lower()       # "hello, world!"
+text.strip()       # убирает пробелы по краям
+text.replace("Hello", "Hi")  # "Hi, World!"
+text.split(",")    # ["Hello", " World!"]
+text.find("World") # 7 — позиция подстроки
+\`\`\`
+
+### Форматирование строк
+
+\`\`\`python
+name = "Алиса"
+age = 25
+
+# f-строки (рекомендуется)
+print(f"Меня зовут {name}, мне {age} лет")
+
+# format()
+print("Меня зовут {}, мне {} лет".format(name, age))
+\`\`\``,
+                        code: `# Работа со строками
+name = "Python"
+version = 3.12
+
+# Конкатенация
+full_name = name + " " + str(version)
+print("Язык:", full_name)
+
+# Методы строк
+text = "  Hello, Python World!  "
+print("Оригинал:", text)
+print("Верхний регистр:", text.upper().strip())
+print("Длина:", len(text.strip()))
+
+# f-строки
+print(f"Я учу {name} версии {version}")
+
+# Срезы
+word = "Программирование"
+print("Первые 5 символов:", word[:5])
+print("Последние 4 символа:", word[-4:])`,
+                    },
+                ],
+            },
+            {
+                id: 'conditions',
+                title: 'Условные конструкции',
+                icon: '🔀',
+                lessons: [
+                    {
+                        id: 'cond-1',
+                        title: 'if / elif / else',
+                        content: `## Условные конструкции
+
+Условные конструкции позволяют выполнять разный код в зависимости от условий.
+
+### Оператор if
+
+\`\`\`python
+age = 18
+
+if age >= 18:
+    print("Вы совершеннолетний")
+\`\`\`
+
+### if-else
+
+\`\`\`python
+temperature = 15
+
+if temperature > 20:
+    print("Тепло!")
+else:
+    print("Холодно!")
+\`\`\`
+
+### if-elif-else
+
+\`\`\`python
+score = 85
+
+if score >= 90:
+    grade = "A"
+elif score >= 80:
+    grade = "B"
+elif score >= 70:
+    grade = "C"
+elif score >= 60:
+    grade = "D"
+else:
+    grade = "F"
+
+print(f"Оценка: {grade}")  # B
+\`\`\`
+
+### Логические операторы
+
+\`\`\`python
+age = 25
+has_license = True
+
+# and — оба условия истинны
+if age >= 18 and has_license:
+    print("Можете водить")
+
+# or — хотя бы одно условие истинно
+if age < 12 or age > 65:
+    print("Бесплатный проезд")
+
+# not — отрицание
+if not has_license:
+    print("Нужны права")
+\`\`\`
+
+### Тернарный оператор
+
+\`\`\`python
+age = 20
+status = "взрослый" if age >= 18 else "ребёнок"
+print(status)  # "взрослый"
+\`\`\``,
+                        code: `# Программа определения оценки
+score = 85
+
+if score >= 90:
+    grade = "A (Отлично)"
+elif score >= 80:
+    grade = "B (Хорошо)"
+elif score >= 70:
+    grade = "C (Удовлетворительно)"
+elif score >= 60:
+    grade = "D (Минимальный проходной)"
+else:
+    grade = "F (Не сдано)"
+
+print(f"Баллы: {score}")
+print(f"Оценка: {grade}")
+
+# Тернарный оператор
+status = "Сдано" if score >= 60 else "Не сдано"
+print(f"Статус: {status}")`,
+                        exercise: {
+                            description: 'Напишите программу, которая проверяет число: если оно положительное — выводит "positive", если отрицательное — "negative", если ноль — "zero". Используйте переменную `num`.',
+                            starterCode: 'num = 5\n\n# Ваш код здесь\n',
+                            solution: 'num = 5\n\nif num > 0:\n    print("positive")\nelif num < 0:\n    print("negative")\nelse:\n    print("zero")',
+                            hint: 'Используйте if/elif/else для проверки трёх случаев',
+                            tests: [
+                                { description: 'Используется if', check: (code) => code.includes('if') },
+                                { description: 'Используется elif или else', check: (code) => code.includes('elif') || code.includes('else') },
+                                { description: 'Выводит результат через print()', check: (code) => code.includes('print(') },
+                            ],
+                        },
+                    },
+                ],
+            },
+            {
+                id: 'loops',
+                title: 'Циклы',
+                icon: '🔄',
+                lessons: [
+                    {
+                        id: 'loop-1',
+                        title: 'Цикл for',
+                        content: `## Цикл for
+
+Цикл \`for\` используется для перебора элементов последовательности.
+
+### Перебор списка
+
+\`\`\`python
+fruits = ["яблоко", "банан", "вишня"]
+
+for fruit in fruits:
+    print(fruit)
+\`\`\`
+
+### Функция range()
+
+\`\`\`python
+# range(stop) — от 0 до stop-1
+for i in range(5):
+    print(i)  # 0, 1, 2, 3, 4
+
+# range(start, stop) — от start до stop-1
+for i in range(2, 6):
+    print(i)  # 2, 3, 4, 5
+
+# range(start, stop, step) — с шагом
+for i in range(0, 10, 2):
+    print(i)  # 0, 2, 4, 6, 8
+\`\`\`
+
+### Перебор строки
+
+\`\`\`python
+for char in "Python":
+    print(char, end=" ")  # P y t h o n
+\`\`\`
+
+### enumerate() — индекс и значение
+
+\`\`\`python
+colors = ["красный", "зелёный", "синий"]
+
+for index, color in enumerate(colors):
+    print(f"{index}: {color}")
+# 0: красный
+# 1: зелёный
+# 2: синий
+\`\`\`
+
+### Вложенные циклы
+
+\`\`\`python
+for i in range(3):
+    for j in range(3):
+        print(f"({i},{j})", end=" ")
+    print()  # переход на новую строку
+\`\`\``,
+                        code: `# Цикл for — примеры
+
+# Перебор списка
+fruits = ["🍎 Яблоко", "🍌 Банан", "🍒 Вишня", "🍊 Апельсин"]
+print("Фрукты:")
+for fruit in fruits:
+    print(f"  - {fruit}")
+
+# range() — таблица умножения на 7
+print("\\nТаблица умножения на 7:")
+for i in range(1, 11):
+    print(f"  7 × {i} = {7 * i}")
+
+# enumerate()
+print("\\nСписок задач:")
+tasks = ["Учить Python", "Решать задачи", "Писать проекты"]
+for i, task in enumerate(tasks, 1):
+    print(f"  {i}. {task}")`,
+                        exercise: {
+                            description: 'Используя цикл for и range(), выведите все чётные числа от 2 до 20 включительно.',
+                            starterCode: '# Выведите чётные числа от 2 до 20\n',
+                            solution: 'for i in range(2, 21, 2):\n    print(i)',
+                            hint: 'Используйте range(2, 21, 2) — шаг 2 даст только чётные числа',
+                            tests: [
+                                { description: 'Используется цикл for', check: (code) => code.includes('for') },
+                                { description: 'Используется range()', check: (code) => code.includes('range(') },
+                                { description: 'Используется print()', check: (code) => code.includes('print(') },
+                            ],
+                        },
+                    },
+                    {
+                        id: 'loop-2',
+                        title: 'Цикл while',
+                        content: `## Цикл while
+
+Цикл \`while\` выполняется, пока условие истинно.
+
+### Базовый while
+
+\`\`\`python
+count = 0
+while count < 5:
+    print(count)
+    count += 1  # не забудьте увеличить!
+\`\`\`
+
+### break — выход из цикла
+
+\`\`\`python
+while True:
+    answer = input("Введите 'q' для выхода: ")
+    if answer == 'q':
+        break
+    print(f"Вы ввели: {answer}")
+\`\`\`
+
+### continue — пропуск итерации
+
+\`\`\`python
+for i in range(10):
+    if i % 2 == 0:
+        continue  # пропускаем чётные
+    print(i)  # 1, 3, 5, 7, 9
+\`\`\`
+
+### else в цикле
+
+\`\`\`python
+# else выполняется, если цикл НЕ прерван через break
+for i in range(5):
+    if i == 10:
+        break
+else:
+    print("Цикл завершён нормально")
+\`\`\`
+
+### ⚠️ Бесконечный цикл
+
+Будьте осторожны — если условие всегда True и нет break, цикл будет бесконечным:
+
+\`\`\`python
+# ❌ Опасно!
+while True:
+    print("Бесконечность!")
+
+# ✅ Безопасно
+count = 0
+while count < 100:
+    print(count)
+    count += 1
+\`\`\``,
+                        code: `# Цикл while — примеры
+
+# Обратный отсчёт
+print("Запуск ракеты!")
+countdown = 5
+while countdown > 0:
+    print(f"  {countdown}...")
+    countdown -= 1
+print("  🚀 Пуск!")
+
+# Сумма чисел
+total = 0
+number = 1
+while number <= 100:
+    total += number
+    number += 1
+print(f"\\nСумма чисел от 1 до 100 = {total}")`,
+                    },
+                ],
+            },
+            {
+                id: 'functions',
+                title: 'Функции',
+                icon: '⚡',
+                lessons: [
+                    {
+                        id: 'func-1',
+                        title: 'Создание функций',
+                        content: `## Функции в Python
+
+Функция — это блок кода, который выполняет определённую задачу и может быть вызван многократно.
+
+### Определение функции
+
+\`\`\`python
+def greet():
+    print("Привет!")
+
+greet()  # Вызов функции
+\`\`\`
+
+### Параметры и аргументы
+
+\`\`\`python
+def greet(name):
+    print(f"Привет, {name}!")
+
+greet("Алиса")  # Привет, Алиса!
+greet("Боб")    # Привет, Боб!
+\`\`\`
+
+### Возврат значения (return)
+
+\`\`\`python
+def add(a, b):
+    return a + b
+
+result = add(3, 5)
+print(result)  # 8
+\`\`\`
+
+### Значения по умолчанию
+
+\`\`\`python
+def greet(name, greeting="Привет"):
+    print(f"{greeting}, {name}!")
+
+greet("Алиса")              # Привет, Алиса!
+greet("Боб", "Здравствуйте") # Здравствуйте, Боб!
+\`\`\``,
+                        code: `# Функции — примеры
+
+# Простая функция
+def say_hello():
+    print("Привет, мир!")
+
+say_hello()
+
+# Функция с параметрами
+def greet(name, greeting="Привет"):
+    return f"{greeting}, {name}!"
+
+print(greet("Алиса"))
+print(greet("Боб", "Здравствуйте"))`,
+                        exercise: {
+                            description: 'Напишите функцию `square(n)`, которая возвращает квадрат числа n. Вызовите её для числа 7 и выведите результат.',
+                            starterCode: '# Напишите функцию square(n)\n\n\n# Вызовите функцию\n',
+                            solution: 'def square(n):\n    return n ** 2\n\nresult = square(7)\nprint(result)',
+                            hint: 'Используйте def для определения функции и return для возврата значения',
+                            tests: [
+                                { description: 'Определена функция с def', check: (code) => code.includes('def') },
+                                { description: 'Функция называется square', check: (code) => code.includes('square') },
+                                { description: 'Используется return', check: (code) => code.includes('return') },
+                                { description: 'Функция вызывается', check: (code) => code.includes('square(') },
+                            ],
+                        },
+                    },
+                ],
+            },
+            {
+                id: 'collections',
+                title: 'Коллекции данных',
+                icon: '📚',
+                lessons: [
+                    {
+                        id: 'coll-1',
+                        title: 'Списки (list)',
+                        content: `## Списки в Python
+
+Список — это упорядоченная изменяемая коллекция элементов.
+
+### Создание списков
+
+\`\`\`python
+fruits = ["яблоко", "банан", "вишня"]
+numbers = [1, 2, 3, 4, 5]
+mixed = [1, "текст", True, 3.14]
+empty = []
+\`\`\`
+
+### Основные операции
+
+\`\`\`python
+fruits = ["яблоко", "банан", "вишня"]
+
+# Доступ по индексу
+print(fruits[0])    # "яблоко"
+print(fruits[-1])   # "вишня"
+
+# Изменение
+fruits[1] = "апельсин"
+
+# Добавление
+fruits.append("груша")        # в конец
+fruits.insert(1, "манго")     # на позицию
+
+# Удаление
+fruits.remove("банан")   # по значению
+fruits.pop()             # последний элемент
+\`\`\`
+
+### List Comprehension (генератор списков)
+
+\`\`\`python
+# Квадраты чисел от 1 до 10
+squares = [x**2 for x in range(1, 11)]
+# [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+
+# Фильтрация
+evens = [x for x in range(20) if x % 2 == 0]
+# [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+\`\`\``,
+                        code: `# Списки — примеры
+
+# Создание и операции
+fruits = ["🍎", "🍌", "🍒", "🍊", "🍇"]
+print("Фрукты:", fruits)
+
+# List comprehension
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+squares = [x**2 for x in numbers]
+evens = [x for x in numbers if x % 2 == 0]
+
+print(f"\\nКвадраты: {squares}")
+print(f"Чётные: {evens}")`,
+                        exercise: {
+                            description: 'Создайте список чисел от 1 до 10. С помощью list comprehension создайте новый список, содержащий только чётные числа, возведённые в квадрат.',
+                            starterCode: '# Создайте список и отфильтруйте\nnumbers = list(range(1, 11))\n\n# Ваш код здесь\n',
+                            solution: 'numbers = list(range(1, 11))\neven_squares = [x**2 for x in numbers if x % 2 == 0]\nprint(even_squares)',
+                            hint: 'Используйте [x**2 for x in numbers if x % 2 == 0]',
+                            tests: [
+                                { description: 'Используется list comprehension', check: (code) => code.includes('[') && code.includes('for') && code.includes('in') },
+                                { description: 'Есть условие фильтрации (if)', check: (code) => code.includes('if') },
+                                { description: 'Возведение в квадрат (**2)', check: (code) => code.includes('**2') || code.includes('*x') },
+                            ],
+                        },
+                    },
+                    {
+                        id: 'coll-2',
+                        title: 'Словари (dict)',
+                        content: `## Словари
+
+Словарь — это неупорядоченная коллекция пар "ключ-значение".
+
+### Создание словаря
+
+\`\`\`python
+person = {
+    "name": "Алиса",
+    "age": 25,
+    "city": "Москва"
+}
+\`\`\`
+
+### Доступ к значениям
+
+\`\`\`python
+print(person["name"])       # "Алиса"
+print(person.get("age"))    # 25
+\`\`\`
+
+### Перебор словаря
+
+\`\`\`python
+for key, value in person.items():
+    print(f"{key}: {value}")
+\`\`\`
+
+### Dictionary Comprehension
+
+\`\`\`python
+squares = {x: x**2 for x in range(1, 6)}
+# {1: 1, 2: 4, 3: 9, 4: 16, 5: 25}
+\`\`\``,
+                        code: `# Словари — примеры
+
+# Создание словаря
+student = {
+    "имя": "Алиса",
+    "возраст": 20,
+    "курс": 3,
+    "оценки": [5, 4, 5, 5, 4]
+}
+
+# Доступ к данным
+print(f"Студент: {student['имя']}")
+print(f"Средний балл: {sum(student['оценки'])/len(student['оценки']):.1f}")
+
+# Перебор словаря
+print("\\n--- Данные студента ---")
+for key, value in student.items():
+    print(f"  {key}: {value}")`,
+                    },
+                ],
+            },
+            {
+                id: 'oop',
+                title: 'Объектно-ориентированное программирование',
+                icon: '🏗️',
+                lessons: [
+                    {
+                        id: 'oop-1',
+                        title: 'Классы и объекты',
+                        content: `## Классы и объекты
+
+Класс — это шаблон для создания объектов. Объект — это экземпляр класса.
+
+### Создание класса
+
+\`\`\`python
+class Dog:
+    def __init__(self, name, breed):
+        self.name = name      # атрибут
+        self.breed = breed
+
+    def bark(self):
+        return f"{self.name} говорит: Гав!"
+
+# Создание объекта
+my_dog = Dog("Рекс", "Немецкая овчарка")
+print(my_dog.bark())  # "Рекс говорит: Гав!"
+\`\`\`
+
+### Метод __init__ — конструктор
+
+\`\`\`python
+class Student:
+    def __init__(self, name, age, grade=0):
+        self.name = name
+        self.age = age
+        self.grade = grade
+
+    def introduce(self):
+        return f"Я {self.name}, мне {self.age} лет"
+\`\`\``,
+                        code: `# ООП — Классы и объекты
+
+class Animal:
+    """Базовый класс животного"""
+
+    def __init__(self, name, species, sound):
+        self.name = name
+        self.species = species
+        self.sound = sound
+
+    def make_sound(self):
+        return f"{self.name}: {self.sound}!"
+
+# Создаём животных
+dog = Animal("Рекс", "Собака", "Гав")
+cat = Animal("Мурка", "Кошка", "Мяу")
+
+print(dog.make_sound())
+print(cat.make_sound())`,
+                        exercise: {
+                            description: 'Создайте класс `Car` с атрибутами `brand` и `year`, и методом `info()`, который возвращает строку "{brand} ({year})". Создайте объект и выведите info().',
+                            starterCode: '# Создайте класс Car\n\n\n# Создайте объект и выведите info()\n',
+                            solution: 'class Car:\n    def __init__(self, brand, year):\n        self.brand = brand\n        self.year = year\n    \n    def info(self):\n        return f"{self.brand} ({self.year})"\n\nmy_car = Car("Toyota", 2023)\nprint(my_car.info())',
+                            hint: 'Используйте class, __init__, self и def для метода',
+                            tests: [
+                                { description: 'Определён класс Car', check: (code) => code.includes('class Car') },
+                                { description: 'Есть метод __init__', check: (code) => code.includes('__init__') },
+                                { description: 'Есть метод info', check: (code) => code.includes('def info') },
+                                { description: 'Создаётся объект класса', check: (code) => code.includes('Car(') },
+                            ],
+                        },
+                    },
+                ],
+            },
+        ];
+
+        // ==================== УТИЛИТЫ ====================
+
+        function highlightPython(code) {
+            let html = code
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            html = html.replace(/(#.*$)/gm, '<span style="color: #4ade80;">$1</span>');
+            html = html.replace(/("""[\s\S]*?"""|\'\'\'[\s\S]*?\'\'\')/g, '<span style="color: #fde047;">$1</span>');
+            html = html.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g, '<span style="color: #fde047;">$1</span>');
+
+            const keywords = ['def', 'class', 'if', 'elif', 'else', 'for', 'while', 'return', 'import', 'from', 'as', 'try', 'except', 'finally', 'raise', 'with', 'yield', 'lambda', 'pass', 'break', 'continue', 'and', 'or', 'not', 'in', 'is', 'True', 'False', 'None', 'global', 'nonlocal', 'assert', 'del', 'async', 'await'];
+            keywords.forEach(kw => {
+                const regex = new RegExp(`\\b(${kw})\\b`, 'g');
+                html = html.replace(regex, '<span style="color: #c084fc; font-weight: 600;">$1</span>');
+            });
+
+            const builtins = ['print', 'len', 'range', 'int', 'str', 'float', 'list', 'dict', 'set', 'tuple', 'type', 'input', 'open', 'map', 'filter', 'sorted', 'sum', 'min', 'max', 'abs', 'round', 'enumerate', 'zip', 'isinstance', 'super', 'property', 'staticmethod', 'classmethod', 'next', 'iter'];
+            builtins.forEach(fn => {
+                const regex = new RegExp(`\\b(${fn})\\b(?=\\()`, 'g');
+                html = html.replace(regex, '<span style="color: #60a5fa;">$1</span>');
+            });
+
+            html = html.replace(/\b(\d+\.?\d*)\b/g, '<span style="color: #fb923c;">$1</span>');
+            html = html.replace(/(@\w+)/g, '<span style="color: #f472b6;">$1</span>');
+
+            return html;
+        }
+
+        function renderMarkdown(text) {
+            let html = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+
+            html = html.replace(/```python\n([\s\S]*?)```/g, (_, code) => {
+                return `<div style="margin: 1rem 0; border-radius: 0.5rem; overflow: hidden;"><div style="background: #1f2937; padding: 0.5rem 1rem; font-size: 0.75rem; color: #9ca3af; display: flex; align-items: center; gap: 0.5rem;"><span style="width: 0.75rem; height: 0.75rem; border-radius: 50%; background: #ef4444; display: inline-block;"></span><span style="width: 0.75rem; height: 0.75rem; border-radius: 50%; background: #eab308; display: inline-block;"></span><span style="width: 0.75rem; height: 0.75rem; border-radius: 50%; background: #22c55e; display: inline-block;"></span><span style="margin-left: 0.5rem;">python</span></div><pre style="background: #111827; padding: 1rem; overflow-x: auto; font-size: 0.875rem; line-height: 1.625;"><code>${highlightPython(code.trim())}</code></pre></div>`;
+            });
+
+            html = html.replace(/^### (.+)$/gm, '<h3 style="font-size: 1.125rem; font-weight: 700; color: #f3f4f6; margin-top: 1.5rem; margin-bottom: 0.5rem;">$1</h3>');
+            html = html.replace(/^## (.+)$/gm, '<h2 style="font-size: 1.5rem; font-weight: 700; color: #ffffff; margin-top: 2rem; margin-bottom: 1rem;">$1</h2>');
+
+            html = html.replace(/\|(.+)\|\n\|[-| ]+\|\n((?:\|.+\|\n?)*)/g, (_, header, body) => {
+                const headers = header.split('|').map(h => h.trim()).filter(Boolean);
+                const rows = body.trim().split('\n').map(row =>
+                    row.split('|').map(cell => cell.trim()).filter(Boolean)
+                );
+                let table = '<div style="margin: 1rem 0; overflow-x: auto;"><table style="width: 100%; font-size: 0.875rem; border-collapse: collapse;"><thead><tr>';
+                headers.forEach(h => { table += `<th style="background: #374151; color: #e5e7eb; padding: 0.5rem 1rem; text-align: left; border: 1px solid #4b5563;">${h}</th>`; });
+                table += '</tr></thead><tbody>';
+                rows.forEach(row => {
+                    table += '<tr>';
+                    row.forEach(cell => { table += `<td style="padding: 0.5rem 1rem; border: 1px solid #374151; color: #d1d5db;">${cell}</td>`; });
+                    table += '</tr>';
+                });
+                table += '</tbody></table></div>';
+                return table;
+            });
+
+            html = html.replace(/^> (.+)$/gm, '<blockquote style="border-left: 4px solid #3b82f6; padding-left: 1rem; padding-top: 0.5rem; padding-bottom: 0.5rem; margin: 0.75rem 0; background: rgba(59, 130, 246, 0.1); border-radius: 0 0.25rem 0.25rem 0; color: #93c5fd;">$1</blockquote>');
+
+            html = html.replace(/^- (.+)$/gm, '<li style="margin-left: 1rem; color: #d1d5db; list-style-type: disc; list-style-position: inside; margin-bottom: 0.25rem;">$1</li>');
+            html = html.replace(/^\d+\. (.+)$/gm, '<li style="margin-left: 1rem; color: #d1d5db; list-style-type: decimal; list-style-position: inside; margin-bottom: 0.25rem;">$1</li>');
+
+            html = html.replace(/`([^`]+)`/g, '<code style="background: #374151; color: #86efac; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-size: 0.875rem; font-family: monospace;">$1</code>');
+
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong style="color: #ffffff; font-weight: 600;">$1</strong>');
+
+            html = html.replace(/\n\n/g, '<br/><br/>');
+
+            return html;
+        }
+
+        // ==================== КОМПОНЕНТЫ ====================
+
+        function App() {
+            const [currentView, setCurrentView] = useState('home');
+            const [currentModule, setCurrentModule] = useState(0);
+            const [currentLesson, setCurrentLesson] = useState(0);
+            const [completedLessons, setCompletedLessons] = useState(() => {
+                const saved = localStorage.getItem('pylearn_completed');
+                return saved ? new Set(JSON.parse(saved)) : new Set();
+            });
+            const [userCode, setUserCode] = useState('');
+            const [showHint, setShowHint] = useState(false);
+            const [testResults, setTestResults] = useState([]);
+            const [sidebarOpen, setSidebarOpen] = useState(false);
+
+            useEffect(() => {
+                localStorage.setItem('pylearn_completed', JSON.stringify([...completedLessons]));
+            }, [completedLessons]);
+
+            const totalLessons = modules.reduce((acc, m) => acc + m.lessons.length, 0);
+            const progress = Math.round((completedLessons.size / totalLessons) * 100);
+
+            const openLesson = useCallback((moduleIdx, lessonIdx) => {
+                setCurrentModule(moduleIdx);
+                setCurrentLesson(lessonIdx);
+                setCurrentView('lesson');
+                setSidebarOpen(false);
+                window.scrollTo(0, 0);
+            }, []);
+
+            const openExercise = useCallback(() => {
+                const lesson = modules[currentModule].lessons[currentLesson];
+                if (lesson.exercise) {
+                    setUserCode(lesson.exercise.starterCode);
+                    setTestResults([]);
+                    setShowHint(false);
+                    setCurrentView('exercise');
+                }
+            }, [currentModule, currentLesson]);
+
+            const runTests = useCallback(() => {
+                const lesson = modules[currentModule].lessons[currentLesson];
+                if (!lesson.exercise) return;
+
+                const results = lesson.exercise.tests.map(test => ({
+                    passed: test.check(userCode),
+                    message: test.description,
+                }));
+                setTestResults(results);
+
+                if (results.every(r => r.passed)) {
+                    const lessonId = lesson.id;
+                    setCompletedLessons(prev => new Set([...prev, lessonId]));
+                }
+            }, [currentModule, currentLesson, userCode]);
+
+            const markComplete = useCallback(() => {
+                const lesson = modules[currentModule].lessons[currentLesson];
+                setCompletedLessons(prev => new Set([...prev, lesson.id]));
+            }, [currentModule, currentLesson]);
+
+            const nextLesson = useCallback(() => {
+                const module = modules[currentModule];
+                if (currentLesson < module.lessons.length - 1) {
+                    openLesson(currentModule, currentLesson + 1);
+                } else if (currentModule < modules.length - 1) {
+                    openLesson(currentModule + 1, 0);
+                } else {
+                    setCurrentView('home');
+                }
+            }, [currentModule, currentLesson, openLesson]);
+
+            const prevLesson = useCallback(() => {
+                if (currentLesson > 0) {
+                    openLesson(currentModule, currentLesson - 1);
+                } else if (currentModule > 0) {
+                    const prevModule = modules[currentModule - 1];
+                    openLesson(currentModule - 1, prevModule.lessons.length - 1);
+                }
+            }, [currentModule, currentLesson, openLesson]);
+
+            const currentModuleData = modules[currentModule];
+            const currentLessonData = currentModuleData?.lessons[currentLesson];
+            const isCompleted = currentLessonData ? completedLessons.has(currentLessonData.id) : false;
+
+            return (
+                <div className="min-h-screen bg-gray-900 text-gray-100">
+                    {/* Header */}
+                    <header className="bg-gray-800 border-b border-gray-700 sticky top-0 z-50">
+                        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                                    className="lg:hidden p-2 hover:bg-gray-700 rounded-lg transition-colors"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    </svg>
+                                </button>
+                                <button onClick={() => setCurrentView('home')} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                                    <span className="text-2xl">🐍</span>
+                                    <span className="text-xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+                                        PyLearn
+                                    </span>
+                                </button>
+                            </div>
+
+                            <div className="flex items-center gap-4">
+                                <div className="hidden sm:flex items-center gap-3">
+                                    <div className="w-32 bg-gray-700 rounded-full h-2.5">
+                                        <div
+                                            className="bg-gradient-to-r from-green-400 to-blue-500 h-2.5 rounded-full transition-all duration-500"
+                                            style={{ width: `${progress}%` }}
+                                        />
+                                    </div>
+                                    <span className="text-sm text-gray-400">{progress}%</span>
+                                </div>
+                                <div className="flex items-center gap-1 bg-gray-700 px-3 py-1.5 rounded-full">
+                                    <span className="text-yellow-400">🔥</span>
+                                    <span className="text-sm font-medium">{completedLessons.size}/{totalLessons}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+
+                    <div className="flex">
+                        {/* Sidebar */}
+                        <aside className={`fixed lg:sticky top-[57px] left-0 h-[calc(100vh-57px)] w-72 bg-gray-800 border-r border-gray-700 overflow-y-auto transform transition-transform duration-300 z-40 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+                            <nav className="p-4">
+                                <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Содержание курса</h2>
+                                {modules.map((module, mIdx) => (
+                                    <div key={module.id} className="mb-4">
+                                        <div className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-300">
+                                            <span>{module.icon}</span>
+                                            <span>{module.title}</span>
+                                        </div>
+                                        <div className="ml-4 space-y-0.5">
+                                            {module.lessons.map((lesson, lIdx) => {
+                                                const isActive = mIdx === currentModule && lIdx === currentLesson && currentView !== 'home';
+                                                const isDone = completedLessons.has(lesson.id);
+                                                return (
+                                                    <button
+                                                        key={lesson.id}
+                                                        onClick={() => openLesson(mIdx, lIdx)}
+                                                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all ${
+                                                            isActive
+                                                                ? 'bg-blue-600/20 text-blue-400 border border-blue-500/30'
+                                                                : 'text-gray-400 hover:bg-gray-700 hover:text-gray-200'
+                                                        }`}
+                                                    >
+                                                        <div className="flex items-center gap-2">
+                                                            {isDone ? (
+                                                                <span className="text-green-400 text-xs">✓</span>
+                                                            ) : (
+                                                                <span className="text-gray-600 text-xs">○</span>
+                                                            )}
+                                                            <span className="truncate">{lesson.title}</span>
+                                                        </div>
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </nav>
+                        </aside>
+
+                        {sidebarOpen && (
+                            <div
+                                className="fixed inset-0 bg-black/50 z-30 lg:hidden"
+                                onClick={() => setSidebarOpen(false)}
+                            />
+                        )}
+
+                        {/* Main Content */}
+                        <main className="flex-1 min-h-[calc(100vh-57px)]">
+                            {currentView === 'home' ? (
+                                <HomePage
+                                    progress={progress}
+                                    completedCount={completedLessons.size}
+                                    totalLessons={totalLessons}
+                                    modules={modules}
+                                    completedLessons={completedLessons}
+                                    onStartLesson={openLesson}
+                                />
+                            ) : currentView === 'exercise' && currentLessonData?.exercise ? (
+                                <ExercisePage
+                                    exercise={currentLessonData.exercise}
+                                    userCode={userCode}
+                                    setUserCode={setUserCode}
+                                    testResults={testResults}
+                                    showHint={showHint}
+                                    setShowHint={setShowHint}
+                                    runTests={runTests}
+                                    onBack={() => setCurrentView('lesson')}
+                                />
+                            ) : (
+                                <LessonPage
+                                    lesson={currentLessonData}
+                                    moduleTitle={currentModuleData.title}
+                                    moduleIcon={currentModuleData.icon}
+                                    isCompleted={isCompleted}
+                                    markComplete={markComplete}
+                                    nextLesson={nextLesson}
+                                    prevLesson={prevLesson}
+                                    openExercise={openExercise}
+                                    hasExercise={!!currentLessonData?.exercise}
+                                    moduleIdx={currentModule}
+                                    lessonIdx={currentLesson}
+                                    totalModules={modules.length}
+                                    totalLessonsInModule={currentModuleData.lessons.length}
+                                />
+                            )}
+                        </main>
+                    </div>
+                </div>
+            );
+        }
+
+        function LessonPage({ lesson, moduleTitle, moduleIcon, isCompleted, markComplete, nextLesson, prevLesson, openExercise, hasExercise, moduleIdx, lessonIdx, totalModules, totalLessonsInModule }) {
+            return (
+                <div className="max-w-4xl mx-auto px-4 py-8">
+                    <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
+                        <span>{moduleIcon}</span>
+                        <span>{moduleTitle}</span>
+                        <span>/</span>
+                        <span className="text-gray-300">{lesson.title}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2 mb-6">
+                        <span className="text-xs text-gray-500">
+                            Модуль {moduleIdx + 1}/{totalModules} • Урок {lessonIdx + 1}/{totalLessonsInModule}
+                        </span>
+                    </div>
+
+                    <h1 className="text-3xl font-bold text-white mb-8">{lesson.title}</h1>
+
+                    <div
+                        className="prose prose-invert max-w-none lesson-content"
+                        dangerouslySetInnerHTML={{ __html: renderMarkdown(lesson.content) }}
+                    />
+
+                    {lesson.code && (
+                        <div className="mt-8">
+                            <h3 className="text-lg font-semibold text-gray-200 mb-3 flex items-center gap-2">
+                                <span>💻</span> Интерактивный пример
+                            </h3>
+                            <div className="rounded-xl overflow-hidden border border-gray-700">
+                                <div className="bg-gray-800 px-4 py-2 flex items-center gap-2">
+                                    <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                                    <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
+                                    <span className="w-3 h-3 rounded-full bg-green-500"></span>
+                                    <span className="ml-2 text-sm text-gray-400">example.py</span>
+                                </div>
+                                <pre className="bg-gray-900 p-4 overflow-x-auto text-sm leading-relaxed">
+                                    <code dangerouslySetInnerHTML={{ __html: highlightPython(lesson.code) }} />
+                                </pre>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="mt-10 flex flex-wrap items-center gap-4">
+                        {!isCompleted && (
+                            <button
+                                onClick={markComplete}
+                                className="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                            >
+                                <span>✓</span> Отметить как пройденный
+                            </button>
+                        )}
+                        {isCompleted && (
+                            <span className="px-4 py-2 bg-green-600/20 text-green-400 rounded-lg border border-green-600/30 flex items-center gap-2">
+                                <span>✓</span> Пройдено
+                            </span>
+                        )}
+                        {hasExercise && (
+                            <button
+                                onClick={openExercise}
+                                className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
+                            >
+                                <span>🏋️</span> Практика
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="mt-12 pt-8 border-t border-gray-700 flex justify-between">
+                        <button
+                            onClick={prevLesson}
+                            disabled={moduleIdx === 0 && lessonIdx === 0}
+                            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 disabled:opacity-30 disabled:cursor-not-allowed rounded-lg transition-colors flex items-center gap-2"
+                        >
+                            <span>←</span> Назад
+                        </button>
+                        <button
+                            onClick={nextLesson}
+                            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors flex items-center gap-2"
+                        >
+                            Далее <span>→</span>
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        function ExercisePage({ exercise, userCode, setUserCode, testResults, showHint, setShowHint, runTests, onBack }) {
+            const allPassed = testResults.length > 0 && testResults.every(r => r.passed);
+
+            return (
+                <div className="max-w-5xl mx-auto px-4 py-8">
+                    <button onClick={onBack} className="mb-6 text-gray-400 hover:text-gray-200 flex items-center gap-2 transition-colors">
+                        <span>←</span> Вернуться к уроку
+                    </button>
+
+                    <div className="grid lg:grid-cols-2 gap-6">
+                        <div>
+                            <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                                <span>🏋️</span> Практическое задание
+                            </h2>
+                            <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
+                                <p className="text-gray-300 leading-relaxed mb-6">{exercise.description}</p>
+
+                                <div className="space-y-2 mb-6">
+                                    <h4 className="text-sm font-medium text-gray-400 mb-2">Тесты:</h4>
+                                    {exercise.tests.map((test, i) => {
+                                        const result = testResults[i];
+                                        return (
+                                            <div key={i} className={`flex items-center gap-2 text-sm p-2 rounded ${
+                                                result ? (result.passed ? 'bg-green-900/30 text-green-400' : 'bg-red-900/30 text-red-400') : 'bg-gray-700/50 text-gray-400'
+                                            }`}>
+                                                <span>{result ? (result.passed ? '✅' : '❌') : '⬜'}</span>
+                                                <span>{test.description}</span>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+
+                                <div>
+                                    {!showHint ? (
+                                        <button
+                                            onClick={() => setShowHint(true)}
+                                            className="text-sm text-yellow-400 hover:text-yellow-300 flex items-center gap-1"
+                                        >
+                                            💡 Показать подсказку
+                                        </button>
+                                    ) : (
+                                        <div className="bg-yellow-900/20 border border-yellow-700/50 rounded-lg p-3">
+                                            <p className="text-sm text-yellow-300">💡 {exercise.hint}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            {allPassed && (
+                                <div className="mt-4 bg-green-900/30 border border-green-600/50 rounded-xl p-4 text-center">
+                                    <span className="text-3xl mb-2 block">🎉</span>
+                                    <p className="text-green-400 font-semibold">Отлично! Все тесты пройдены!</p>
+                                </div>
+                            )}
+                        </div>
+
+                        <div>
+                            <div className="rounded-xl overflow-hidden border border-gray-700">
+                                <div className="bg-gray-800 px-4 py-2 flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                                        <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
+                                        <span className="w-3 h-3 rounded-full bg-green-500"></span>
+                                        <span className="ml-2 text-sm text-gray-400">solution.py</span>
+                                    </div>
+                                    <button
+                                        onClick={runTests}
+                                        className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors"
+                                    >
+                                        ▶ Запустить
+                                    </button>
+                                </div>
+                                <textarea
+                                    value={userCode}
+                                    onChange={(e) => setUserCode(e.target.value)}
+                                    className="w-full h-80 bg-gray-900 text-gray-100 p-4 font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                                    spellCheck={false}
+                                    placeholder="# Напишите ваш код здесь..."
+                                />
+                            </div>
+
+                            <div className="mt-4">
+                                <details className="group">
+                                    <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-200 transition-colors">
+                                        👀 Показать решение
+                                    </summary>
+                                    <div className="mt-2 rounded-lg overflow-hidden border border-gray-700">
+                                        <pre className="bg-gray-900 p-4 overflow-x-auto text-sm">
+                                            <code dangerouslySetInnerHTML={{ __html: highlightPython(exercise.solution) }} />
+                                        </pre>
+                                    </div>
+                                </details>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function HomePage({ progress, completedCount, totalLessons, modules: mods, completedLessons, onStartLesson }) {
+            return (
+                <div className="max-w-5xl mx-auto px-4 py-12">
+                    <div className="text-center mb-16">
+                        <div className="text-6xl mb-6">🐍</div>
+                        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+                            <span className="bg-gradient-to-r from-green-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">
+                                Бесплатный курс Python
+                            </span>
+                        </h1>
+                        <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-8">
+                            Изучите Python с нуля — от базовых переменных до продвинутых тем.
+                            Интерактивные уроки, примеры кода и практические задания.
+                        </p>
+
+                        <div className="flex flex-wrap justify-center gap-6 mb-8">
+                            <div className="bg-gray-800 rounded-xl px-6 py-4 border border-gray-700">
+                                <div className="text-2xl font-bold text-green-400">{mods.length}</div>
+                                <div className="text-sm text-gray-400">Модулей</div>
+                            </div>
+                            <div className="bg-gray-800 rounded-xl px-6 py-4 border border-gray-700">
+                                <div className="text-2xl font-bold text-blue-400">{totalLessons}</div>
+                                <div className="text-sm text-gray-400">Уроков</div>
+                            </div>
+                            <div className="bg-gray-800 rounded-xl px-6 py-4 border border-gray-700">
+                                <div className="text-2xl font-bold text-purple-400">{completedCount}</div>
+                                <div className="text-sm text-gray-400">Пройдено</div>
+                            </div>
+                        </div>
+
+                        <div className="max-w-md mx-auto">
+                            <div className="flex justify-between text-sm text-gray-400 mb-2">
+                                <span>Прогресс курса</span>
+                                <span>{progress}%</span>
+                            </div>
+                            <div className="w-full bg-gray-700 rounded-full h-3">
+                                <div
+                                    className="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-700"
+                                    style={{ width: `${progress}%` }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                        {mods.map((module, mIdx) => {
+                            const moduleCompleted = module.lessons.filter(l => completedLessons.has(l.id)).length;
+                            const moduleProgress = Math.round((moduleCompleted / module.lessons.length) * 100);
+                            const isModuleComplete = moduleCompleted === module.lessons.length;
+
+                            return (
+                                <div
+                                    key={module.id}
+                                    className={`bg-gray-800 rounded-xl p-6 border transition-all hover:border-gray-500 hover:shadow-lg ${
+                                        isModuleComplete ? 'border-green-600/50' : 'border-gray-700'
+                                    }`}
+                                >
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-3xl">{module.icon}</span>
+                                            <div>
+                                                <h3 className="text-lg font-semibold text-white">{module.title}</h3>
+                                                <p className="text-sm text-gray-400">{module.lessons.length} уроков</p>
+                                            </div>
+                                        </div>
+                                        {isModuleComplete && <span className="text-green-400 text-xl">✓</span>}
+                                    </div>
+
+                                    <div className="mb-4">
+                                        <div className="w-full bg-gray-700 rounded-full h-1.5">
+                                            <div
+                                                className="bg-gradient-to-r from-green-400 to-blue-500 h-1.5 rounded-full transition-all"
+                                                style={{ width: `${moduleProgress}%` }}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-1">
+                                        {module.lessons.map((lesson, lIdx) => {
+                                            const isDone = completedLessons.has(lesson.id);
+                                            return (
+                                                <button
+                                                    key={lesson.id}
+                                                    onClick={() => onStartLesson(mIdx, lIdx)}
+                                                    className="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-gray-700 transition-colors flex items-center gap-2"
+                                                >
+                                                    {isDone ? (
+                                                        <span className="text-green-400 text-xs flex-shrink-0">✅</span>
+                                                    ) : (
+                                                        <span className="text-gray-600 text-xs flex-shrink-0">○</span>
+                                                    )}
+                                                    <span className={`${isDone ? 'text-gray-300' : 'text-gray-400'}`}>
+                                                        {lesson.title}
+                                                    </span>
+                                                    {lesson.exercise && (
+                                                        <span className="ml-auto text-xs bg-blue-600/20 text-blue-400 px-1.5 py-0.5 rounded">
+                                                            задача
+                                                        </span>
+                                                    )}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <button
+                                        onClick={() => onStartLesson(mIdx, 0)}
+                                        className="mt-4 w-full py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium transition-colors"
+                                    >
+                                        {moduleCompleted === 0 ? '🚀 Начать модуль' : '📖 Продолжить'}
+                                    </button>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    <div className="mt-16 text-center text-gray-500 text-sm">
+                        <p>PyLearn — бесплатная платформа для изучения Python</p>
+                        <p className="mt-1">Создано с ❤️ для начинающих программистов</p>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
