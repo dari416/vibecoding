@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreePyCamp: Полный курс Python</title>
+    <style>
+        :root {
+            --bg-main: #1e1e1e;
+            --bg-sidebar: #252526;
+            --text-main: #cccccc;
+            --text-muted: #9cdcfe;
+            --accent: #007acc;
+            --success: #4ec9b0;
+            --border: #333333;
+        }
+        * { box-sizing: border-box; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-main); color: var(--text-main); }
+        
+        .container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; overflow: hidden; }
+        
+        .sidebar {
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        .sidebar h2 { text-align: center; color: var(--accent); margin: 0 0 20px 0; font-size: 1.2rem; }
+        .module { margin-bottom: 25px; }
+        .module-title { font-weight: bold; color: var(--text-muted); padding: 0 15px 5px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .lesson-list { list-style: none; padding: 0; margin: 0; }
+        .lesson-list li { padding: 8px 20px; cursor: pointer; font-size: 0.9rem; }
+        .lesson-list li:hover { background: #333333; }
+        .lesson-list li.active { background: var(--accent); color: #000; }
+
+        .main-content { display: grid; grid-template-rows: 1fr auto; overflow: hidden; }
+        
+        .lesson-view { display: none; padding: 20px; overflow-y: auto; }
+        .lesson-view.active { display: block; }
+        .lesson-view h1 { color: var(--accent); margin-top: 0; }
+        .concept { background: #2d2d2d; border-left: 4px solid var(--accent); padding: 15px; margin: 20px 0; }
+        .concept h3 { margin-top: 0; }
+
+        .workspace { display: grid; grid-template-columns: 1fr 1fr; height: 300px; margin-top: 20px; gap: 10px; }
+        .editor, .console { width: 100%; height: 100%; border: 1px solid var(--border); background: #1e1e1e; }
+        .console { padding: 10px; font-family: monospace; overflow-y: auto; white-space: pre-wrap; }
+        .controls { text-align: right; margin-top: 10px; }
+        button { background: var(--accent); border: none; color: #000; padding: 10px 20px; font-weight: bold; cursor: pointer; border-radius: 3px; }
+        button:hover { background: #005a9e; }
+        button:disabled { background: #555; cursor: not-allowed; }
+
+        .test-block { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
+        .test-case { background: #2d2d2d; padding: 15px; margin-bottom: 10px; border-radius: 3px; }
+        .test-case button { margin-top: 10px; font-size: 0.9rem; }
+        .test-result { margin-top: 5px; font-weight: bold; min-height: 20px; }
+        .pass { color: var(--success); }
+        .fail { color: #f07878; }
+
+        @media (max-width: 900px) {
+            .container { grid-template-columns: 1fr; }
+            .sidebar { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--border); }
+            .workspace { grid-template-columns: 1fr; height: 500px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <h2>FreePyCamp</h2>
+        <div id="curriculum">
+            <div class="module">
+                <div class="module-title">Модуль 1: Основы</div>
+                <ul class="lesson-list">
+                    <li data-lesson="print">01. Вывод в консоль (print)</li>
+                    <li data-lesson="variables">02. Переменные и типы данных</li>
+                    <li data-lesson="input">03. Ввод данных (input)</li>
+                </ul>
+            </div>
+            <div class="module">
+                <div class="module-title">Модуль 2: Логика</div>
+                <ul class="lesson-list">
+                    <li data-lesson="if">04. Условные операторы (if/else)</li>
+                    <li data-lesson="loops">05. Циклы (for, while)</li>
+                </ul>
+            </div>
+            <div class="module">
+                <div class="module-title">Модуль 3: Структуры данных</div>
+                <ul class="lesson-list">
+                    <li data-lesson="lists">06. Списки (Lists)</li>
+                    <li data-lesson="dicts">07. Словари (Dictionaries)</li>
+                </ul>
+            </div>
+            <div class="module">
+                <div class="module-title">Модуль 4: Функции</div>
+                <ul class="lesson-list">
+                    <li data-lesson="functions">08. Создание функций</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Lesson 1 -->
+        <div id="print" class="lesson-view active">
+            <h1>01. Вывод в консоль (print)</h1>
+            <p>Функция <code>print()</code> выводит текст или значения переменных в консоль.</p>
+            <div class="concept">
+                <h3>Ваша задача</h3>
+                <p>Напишите код, который выводит на экран строку <code>Hello, Python!</code></p>
+            </div>
+
+            <div class="workspace">
+                <div class="editor" id="editor-print" contenteditable="true">print()</div>
+                <div class="console" id="console-print"></div>
+            </div>
+            <div class="controls">
+                <button onclick="runCode('print')">▶ Выполнить код</button>
+            </div>
+
+            <div class="test-block">
+                <h3>Проверка задания</h3>
+                <div class="test-case">
+                    <p>Программа должна вывести ровно: <code>Hello, Python!</code></p>
+                    <button onclick="checkTask('print', `print('Hello, Python!')`)">Проверить решение</button>
+                    <div class="test-result" id="result-print"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 2 -->
+        <div id="variables" class="lesson-view">
+            <h1>02. Переменные и типы данных</h1>
+            <p>Переменные хранят данные. Основные типы: <code>int</code> (целые), <code>float</code> (дробные), <code>str</code> (строки), <code>bool</code> (истина/ложь).</p>
+            <div class="concept">
+                <h3>Ваша задача</h3>
+                <p>Создайте переменную <code>age</code> со значением <code>25</code> и переменную <code>name</code> со значением <code>Ivan</code>. Выведите их в консоль через запятую.</p>
+            </div>
+
+            <div class="workspace">
+                <div class="editor" id="editor-variables" contenteditable="true"></div>
+                <div class="console" id="console-variables"></div>
+            </div>
+            <div class="controls">
+                <button onclick="runCode('variables')">▶ Выполнить код</button>
+            </div>
+
+            <div class="test-block">
+                <h3>Проверка задания</h3>
+                <div class="test-case">
+                    <p>В коде должны быть созданы переменные name и age, а затем выведены.</p>
+                    <button onclick="checkTask('variables', `name = 'Ivan'\nage = 25\nprint(name, age)`)">Проверить решение</button>
+                    <div class="test-result" id="result-variables"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 3 -->
+        <div id="input" class="lesson-view">
+            <h1>03. Ввод данных (input)</h1>
+            <p><code>input()</code> останавливает программу и ждет, пока пользователь введет текст.</p>
+            <div class="concept">
+                <h3>Ваша задача</h3>
+                <p>Спросите пользователя "Как тебя зовут? ", сохраните ответ в переменную и поздоровайтесь с ним.</p>
+            </div>
+
+            <div class="workspace">
+                <div class="editor" id="editor-input" contenteditable="true"></div>
+                <div class="console" id="console-input"></div>
+            </div>
+            <div class="controls">
+                <button onclick="runCode('input')">▶ Выполнить код</button>
+            </div>
+
+            <div class="test-block">
+                <h3>Проверка задания</h3>
+                <div class="test-case">
+                    <p>Код должен запрашивать ввод и выводить "Привет, [имя]!".</p>
+                    <button onclick="checkTask('input', `name = input('Как тебя зовут? ')\nprint('Привет, ' + name + '!')`)">Проверить решение</button>
+                    <div class="test-result" id="result-input"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 4 -->
+        <div id="if" class="lesson-view">
+            <h1>04. Условные операторы (if/else)</h1>
+            <p><code>if</code> позволяет выполнять код только при выполнении условия.</p>
+            <div class="concept">
+                <h3>Ваша задача</h3>
+                <p>Напишите программу: если число больше 10, выведите "Много", иначе выведите "Мало". Проверьте на числе 15.</p>
+            </div>
+
+            <div class="workspace">
+                <div class="editor" id="editor-if" contenteditable="true">num = 15</div>
+                <div class="console" id="console-if"></div>
+            </div>
+            <div class="controls">
+                <button onclick="runCode('if')">▶ Выполнить код</button>
+            </div>
+
+            <div class="test-block">
+                <h3>Проверка задания</h3>
+                <div class="test-case">
+                    <p>Программа должна вывести "Много".</p>
+                    <button onclick="checkTask('if', `num = 15\nif num > 10:\n    print('Много')\nelse:\n    print('Мало')`)">Проверить решение</button>
+                    <div class="test-result" id="result-if"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 5 -->
+        <div id="loops" class="lesson-view">
+            <h1>05. Циклы (for, while)</h1>
+            <p><code>for</code> используется для перебора последовательностей. <code>range(5)</code> создает числа от 0 до 4.</p>
+            <div class="concept">
+                <h3>Ваша задача</h3>
+                <p>Выведите в консоль числа от 1 до 5.</p>
+            </div>
+
+            <div class="workspace">
+                <div class="editor" id="editor-loops" contenteditable="true"></div>
+                <div class="console" id="console-loops"></div>
+            </div>
+            <div class="controls">
+                <button onclick="runCode('loops')">▶ Выполнить код</button>
+            </div>
+
+            <div class="test-block">
+                <h3>Проверка задания</h3>
+                <div class="test-case">
+                    <p>В консоли должны быть числа 1, 2, 3, 4, 5 с новой строки.</p>
+                    <button onclick="checkTask('loops', `for i in range(1, 6):\n    print(i)`)">Проверить решение</button>
+                    <div class="test-result" id="result-loops"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 6 -->
+        <div id="lists" class="lesson-view">
+            <h1>06. Списки (Lists)</h1>
+            <p>Список — это упорядоченная изменяемая коллекция. Индексация начинается с 0.</p>
+            <div class="concept">
+                <h3>Ваша задача</h3>
+                <p>Создайте список <code>fruits = ['яблоко', 'банан', 'груша']</code> и выведите на экран второй элемент.</p>
+            </div>
+
+            <div class="workspace">
+                <div class="editor" id="editor-lists" contenteditable="true"></div>
+                <div class="console" id="console-lists"></div>
+            </div>
+            <div class="controls">
+                <button onclick="runCode('lists')">▶ Выполнить код</button>
+            </div>
+
+            <div class="test-block">
+                <h3>Проверка задания</h3>
+                <div class="test-case">
+                    <p>В консоли должно быть слово "банан".</p>
+                    <button onclick="checkTask('lists', `fruits = ['яблоко', 'банан', 'груша']\nprint(fruits[1])`)">Проверить решение</button>
+                    <div class="test-result" id="result-lists"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 7 -->
+        <div id="dicts" class="lesson-view">
+            <h1>07. Словари (Dictionaries)</h1>
+            <p>Словарь хранит пары Ключ: Значение. Доступ к значению через ключ.</p>
+            <div class="concept">
+                <h3>Ваша задача</h3>
+                <p>Создайте словарь пользователя с ключами <code>login</code> и <code>status</code>. Выведите статус пользователя.</p>
+            </div>
+
+            <div class="workspace">
+                <div class="editor" id="editor-dicts" contenteditable="true"></div>
+                <div class="console" id="console-dicts"></div>
+            </div>
+            <div class="controls">
+                <button onclick="runCode('dicts')">▶ Выполнить код</button>
+            </div>
+
+            <div class="test-block">
+                <h3>Проверка задания</h3>
+                <div class="test-case">
+                    <p>В консоли должно быть слово "active".</p>
+                    <button onclick="checkTask('dicts', `user = {'login': 'admin', 'status': 'active'}\nprint(user['status'])`)">Проверить решение</button>
+                    <div class="test-result" id="result-dicts"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lesson 8 -->
+        <div id="functions" class="lesson-view">
+            <h1>08. Создание функций</h1>
+            <p>Функции позволяют переиспользовать код. Определяются через <code>def</code>.</p>
+            <div class="concept">
+                <h3>Ваша задача</h3>
+                <p>Создайте функцию <code>cube(n)</code>, которая возвращает число в третьей степени. Вызовите её для числа 3 и выведите результат.</p>
+            </div>
+
+            <div class="workspace">
+                <div class="editor" id="editor-functions" contenteditable="true"></div>
+                <div class="console" id="console-functions"></div>
+            </div>
+            <div class="controls">
+                <button onclick="runCode('functions')">▶ Выполнить код</button>
+            </div>
+
+            <div class="test-block">
+                <h3>Проверка задания</h3>
+                <div class="test-case">
+                    <p>В консоли должно быть число 27.</p>
+                    <button onclick="checkTask('functions', `def cube(n):\n    return n ** 3\n\nprint(cube(3))`)">Проверить решение</button>
+                    <div class="test-result" id="result-functions"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pyodide (Python in Browser) -->
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script>
+
+<script>
+let currentLesson = 'print';
+let pyodide = null;
+
+// Переключение уроков
+document.querySelectorAll('.lesson-list li').forEach(item => {
+    item.addEventListener('click', () => {
+        document.querySelectorAll('.lesson-view').forEach(v => v.classList.remove('active'));
+        document.querySelectorAll('.lesson-list li').forEach(i => i.classList.remove('active'));
+        
+        const lessonId = item.getAttribute('data-lesson');
+        document.getElementById(lessonId).classList.add('active');
+        item.classList.add('active');
+        currentLesson = lessonId;
+    });
+});
+
+// Инициализация Python
+async function loadPyodide() {
+    pyodide = await loadPyodideAsync();
+}
+loadPyodide();
+
+// Выполнение кода из редактора
+async function runCode(lesson) {
+    const editor = document.getElementById('editor-' + lesson);
+    const consoleDiv = document.getElementById('console-' + lesson);
+    consoleDiv.innerHTML = 'Выполняется...';
+    
+    try {
+        // Очищаем переменные перед каждым запуском для чистоты
+        await pyodide.runPythonAsync(`
+import sys
+from io import StringIO
+old_stdout = sys.stdout
+sys.stdout = StringIO()
+`);
+        
+        let code = editor.innerText;
+        // Заменяем русские кавычики на нормальные, чтобы не ломать синтаксис
+        code = code.replace(/“|”/g, '"').replace(/‘|’/g, "'");
+        
+        await pyodide.runPythonAsync(code);
+        
+        let output = await pyodide.runPythonAsync('sys.stdout.getvalue()');
+        sys.stdout = old_stdout;
+        
+        if (output.trim() === '') {
+            consoleDiv.innerHTML = '<span style="color:#f07878;">Код выполнен, но ничего не вывел в консоль.</span>';
+        } else {
+            consoleDiv.innerHTML = output;
+        }
+    } catch (err) {
+        consoleDiv.innerHTML = '<span style="color:#f07878;">Ошибка:\n' + err + '</span>';
+    }
+}
+
+// Проверка решения (строгое совпадение с эталоном)
+async function checkTask(lesson, correctCode) {
+    const resultDiv = document.getElementById('result-' + lesson);
+    const editor = document.getElementById('editor-' + lesson);
+    
+    // Нормализация: убираем лишние пробелы и приводим к строке
+    let userCode = editor.innerText.trim().replace(/\r\n/g, '\n');
+    let correct = correctCode.trim().replace(/\r\n/g, '\n');
+    
+    if (userCode === correct) {
+        resultDiv.innerHTML = '✅ Отлично! Решение верное.';
+        resultDiv.className = 'test-result pass';
+    } else {
+        resultDiv.innerHTML = '❌ Неверно. Попробуйте еще раз или посмотрите на подсказку.';
+        resultDiv.className = 'test-result fail';
+    }
+}
+</script>
+
+</body>
+</html>
